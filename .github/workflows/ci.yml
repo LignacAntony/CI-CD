@@ -2,8 +2,6 @@ name: "CI"
 
 on:
     push:
-        paths:
-            - "/app/**"
         paths-ignore: ".github/workflows/ci-basics.yml"
     workflow_dispatch: ~
 
