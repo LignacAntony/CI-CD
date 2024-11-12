@@ -1,0 +1,19 @@
+name: 'CI'
+
+on:
+  push:
+
+jobs:
+    hello:
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Hello world"
+              run: echo "Hello, World!"
+            - name: "Multiple Lines"
+              run: | 
+                  echo "Say"
+                  echo "Hello"
+                  echo "To"
+                  echo "You"
+            - name: "List directory"
+              run: ls
