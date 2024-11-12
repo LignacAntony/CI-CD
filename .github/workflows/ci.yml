@@ -2,7 +2,7 @@ name: 'CI'
 
 on:
   push:
-    paths: "~"
+    paths: ~
   workflow_dispatch: ~
         
 
@@ -14,11 +14,11 @@ jobs:
               run: echo "Hello, World!"
             - name: "Multiple Lines"
               run: | 
-                  echo "Say"
+                  echo 'Say'
                   exit 1
-                  echo "Hello"
-                  echo "To"
-                  echo "You"
+                  echo 'Hello'
+                  echo 'To'
+                  echo 'You'
               continue-on-error: true
             - name: "List directory"
               run: ls
