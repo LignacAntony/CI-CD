@@ -25,6 +25,12 @@ jobs:
     hello2:
         runs-on: ubuntu-latest
         steps:
-            - name: "Say COucou"
+            - name: "Say Coucou"
               run: echo "Coucou!"
-            
+    hello3:
+        runs-on: ubuntu-latest
+        steps:
+            - name: "Prerequisites"
+              run: |
+                  echo "Hello1 & Hello2 finished successfully"
+        needs: [hello, hello2]
