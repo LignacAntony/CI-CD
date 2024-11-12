@@ -10,6 +10,23 @@ jobs:
         name: "Install dependencies"
         runs-on: ubuntu-latest
         steps:
-          - name: "Checkout Repository"
-            uses: actions/checkout@v4
-          - run: ls
+          -   name: "Checkout Repository"
+              uses: actions/checkout@master
+          -   name: "Setup Enviroment"
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.0.2'
+          -   name: "Speed up the packages installation process"
+              run: composer global require hirak/prestissimo
+          -   name: "Install Packages"
+              run: composer install --no-dev
+          -   name: "Deploy to Server"
+              uses: bishwajitcadhikary/symfony-deploy@v1.0.1
+              with:
+                  user: user
+                  host: host
+                  port: port
+                  path: path
+                  owner: owner
+              env:
+                  DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
