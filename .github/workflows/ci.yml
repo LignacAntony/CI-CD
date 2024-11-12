@@ -12,9 +12,12 @@ jobs:
         steps:
           -   name: "Checkout Repository"
               uses: actions/checkout@master
-          -   name: "Setup Enviroment"
-              uses: shivammathur/setup-php@v2
+          -   name: "Setup Php Enviroment"
+              uses: shivammathur/setup-php@v2.31.1
               with:
-                  php-version: '8.0.2'
+                  php-version: '8.1'
+                  tools: composer
           -   name: "Install Packages"
-              run: composer install --no-dev
+              run: |
+                export APP_ENV=test
+                composer install --prefer-dist --no-interaction --no-progress
