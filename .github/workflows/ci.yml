@@ -6,6 +6,15 @@ on:
     workflow_dispatch: ~
 
 jobs:
+    php-cs-fixer:
+        name: "PHP-CS-Fixer"
+        runs-on: ubuntu-latest
+        steps:
+          -   name: "Checkout Repository"
+              uses: actions/checkout@v4
+            # PHP 8.1
+          - name: "Run PHP-CS-Fixer"
+            uses: erkenes/php-cs-fixer-action@php8.1-1.0.0
     deps:
         name: "Install dependencies"
         runs-on: ubuntu-latest
