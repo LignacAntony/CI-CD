@@ -31,3 +31,5 @@ jobs:
               run: |
                 export APP_ENV=test
                 composer install --prefer-dist --no-interaction --no-progress
+          -   name: "Run Migrations"
+              run: php bin/console d:m:m
