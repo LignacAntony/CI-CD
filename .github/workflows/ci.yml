@@ -21,6 +21,8 @@ jobs:
               run: composer install --prefer-dist --no-interaction --no-progress
           -   name: "Run PHP Code Sniffer"
               run: vendor/bin/phpcs
+          -   name: "Try auto fix"
+              run: vendor/bin/phpcbf
     deps:
         name: "Install dependencies"
         runs-on: ubuntu-latest
