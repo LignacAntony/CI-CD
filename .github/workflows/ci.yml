@@ -27,7 +27,7 @@ jobs:
                   php-version: '8.1'
                   tools: composer
           -   name: "Check database healthy"
-              run: nc -zv localhost 3306
+              run: nc -zv 127.0.0.1 3306
           -   name: "Install Packages"
               run: |
                 export APP_ENV=test
@@ -35,6 +35,6 @@ jobs:
           -   name: "Run Migrations"
               run: php bin/console d:m:m
               env:
-                DATABASE_HOST: localhost
+                DATABASE_HOST: 127.0.0.1
                 DATABASE_NAME: app
                 DATABASE_PASSWORD: secret
