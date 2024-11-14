@@ -18,11 +18,11 @@ jobs:
                   php-version: '8.1'
                   tools: composer
           -   name: "Install Packages"
-              run: composer install --prefer-dist --no-interaction --no-progress
+              run: composer global require "squizlabs/php_codesniffer"
           -   name: "Run PHP Code Sniffer"
               run: vendor/bin/phpcs
-          -   name: "Try auto fix"
-              run: vendor/bin/phpcbf
+        #   -   name: "Try auto fix"
+        #       run: vendor/bin/phpcbf
     deps:
         name: "Install dependencies"
         runs-on: ubuntu-latest
@@ -61,3 +61,4 @@ jobs:
                 php -S 127.0.0.1:8080 -t public &
                 sleep 2
                 nc -zv localhost 8080
+        needs: [php-code-sniffer]
