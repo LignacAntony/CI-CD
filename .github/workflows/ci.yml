@@ -38,3 +38,9 @@ jobs:
                 DATABASE_HOST: 127.0.0.1
                 DATABASE_NAME: app
                 DATABASE_PASSWORD: password
+          -   name: "Start Server"
+              run: |
+                php bin/console
+                php bin/console server:start
+          -   name: "Check database healthy"
+              run: nc -zv localhost 8080
