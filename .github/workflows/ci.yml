@@ -1,92 +1,93 @@
 name: "CI"
 
 on:
-    push:
-        paths-ignore: ".github/workflows/ci-basics.yml"
-    workflow_dispatch: ~
+  push:
+    paths-ignore: ".github/workflows/ci-basics.yml"
+  workflow_dispatch: ~
 
 jobs:
-    php-code-sniffer:
-        name: "PHP-Code-Sniffer"
-        runs-on: ubuntu-latest
-        steps:
-          -   name: "Checkout Repository"
-              uses: actions/checkout@master
-          -   name: "Setup Php Enviroment"
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '8.1'
-                  tools: composer
-          -   name: "Install Packages"
-              run: composer global require "squizlabs/php_codesniffer"
-          -   name: "Run PHP Code Sniffer"
-              run: ~/.composer/vendor/bin/phpcs
-        #   -   name: "Try auto fix"
-        #       run: vendor/bin/phpcbf
-    php-stan:
-        name: "PHP-Stan"
-        runs-on: ubuntu-latest
-        steps:
-          -   name: "Checkout Repository"
-              uses: actions/checkout@master
-          -   name: "Setup Php Enviroment"
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '8.1'
-                  tools: composer
-          -   name: "Install Packages"
-              run: composer global require "phpstan/phpstan"
-          -   name: "Run PHP Stan"
-              run: ~/.composer/vendor/bin/phpstan analyse src
-              continue-on-error: true
-    deps:
-        needs: [php-code-sniffer, php-stan]
-        name: "Install dependencies"
-        runs-on: ubuntu-latest
-        services:
-            mysql:
-                image: mysql
-                env: 
-                    MYSQL_ROOT_PASSWORD: password
-                    MYSQL_DATABASE: app
-                    MYSQL_ROOT_HOST: '%'
-                ports:
-                    - 3306:3306
-        steps:
-          -   name: "Checkout Repository"
-              uses: actions/checkout@master
-          -   name: "Setup Php Enviroment"
-              uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '8.1'
-                  tools: composer
-          -   name: "Check database healthy"
-              run: nc -zv localhost 3306
-          -   name: "Install Packages"
-              run: |
-                export APP_ENV=test
-                composer install --prefer-dist --no-interaction --no-progress
-          -   name: "Run Migrations"
-              run: php bin/console d:m:m
-              env:
-                DATABASE_HOST: 127.0.0.1
-                DATABASE_NAME: app
-                DATABASE_PASSWORD: password
-          -   name: "Start Server"
-              run: |
-                php bin/console
-                php -S 127.0.0.1:8080 -t public &
-                sleep 2
-                nc -zv localhost 8080
-            #- name: "Start PHPUnit"
-            #  uses: php-actions/phpunit@v3
-            - name: "Install PHPUnit"
-              run: |
-                wget -O phpunit.phar https://phar.phpunit.de/phpunit-10.phar
-                chmod +x phpunit.phar
-            - name: "Start PHPUnit"
-              run: php bin/phpunit tests/_1_Unit
-            - name: "Functional Tests"
-              continue-on-error: true
-              run: php bin/phpunit tests/_3_Application
-            
+  php-code-sniffer:
+    name: "PHP-Code-Sniffer"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@master
+      - name: "Setup Php Environment"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+      - name: "Install Packages"
+        run: composer global require "squizlabs/php_codesniffer"
+      - name: "Run PHP Code Sniffer"
+        run: ~/.composer/vendor/bin/phpcs
+      # - name: "Try auto fix"
+      #   run: vendor/bin/phpcbf
+
+  php-stan:
+    name: "PHP-Stan"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@master
+      - name: "Setup Php Environment"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+      - name: "Install Packages"
+        run: composer global require "phpstan/phpstan"
+      - name: "Run PHP Stan"
+        run: ~/.composer/vendor/bin/phpstan analyse src
+        continue-on-error: true
+
+  deps:
+    needs: [php-code-sniffer, php-stan]
+    name: "Install dependencies"
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: app
+          MYSQL_ROOT_HOST: '%'
+        ports:
+          - 3306:3306
+    steps:
+      - name: "Checkout Repository"
+        uses: actions/checkout@master
+      - name: "Setup Php Environment"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          tools: composer
+      - name: "Check database healthy"
+        run: nc -zv localhost 3306
+      - name: "Install Packages"
+        run: |
+          export APP_ENV=test
+          composer install --prefer-dist --no-interaction --no-progress
+      - name: "Run Migrations"
+        run: php bin/console d:m:m
+        env:
+          DATABASE_HOST: 127.0.0.1
+          DATABASE_NAME: app
+          DATABASE_PASSWORD: password
+      - name: "Start Server"
+        run: |
+          php bin/console
+          php -S 127.0.0.1:8080 -t public &
+          sleep 2
+          nc -zv localhost 8080
+      # - name: "Start PHPUnit"
+      #   uses: php-actions/phpunit@v3
+      - name: "Install PHPUnit"
+        run: |
+          wget -O phpunit.phar https://phar.phpunit.de/phpunit-10.phar
+          chmod +x phpunit.phar
+      - name: "Start PHPUnit"
+        run: php bin/phpunit tests/_1_Unit
+      - name: "Functional Tests"
+        continue-on-error: true
+        run: php bin/phpunit tests/_3_Application
